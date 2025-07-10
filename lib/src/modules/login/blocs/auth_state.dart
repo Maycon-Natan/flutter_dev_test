@@ -9,9 +9,9 @@ class LoginLoading extends AuthState {}
 class LoginSuccess extends AuthState {}
 
 class LoginFailure extends AuthState {
-  final AuthException message;
+  final AuthException error;
 
-  LoginFailure({required this.message});
+  LoginFailure({required this.error});
 }
 
 class GetRecoverySecretInitial extends AuthState {
@@ -30,7 +30,7 @@ class GetRecoverySecretSuccess extends AuthState {
 }
 
 class GetRecoverySecretFailure extends AuthState {
-  final AuthException message;
+  final AuthException error;
 
-  GetRecoverySecretFailure({required this.message});
+  GetRecoverySecretFailure({required this.error});
 }

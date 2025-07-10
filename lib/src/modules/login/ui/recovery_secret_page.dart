@@ -24,7 +24,6 @@ class _RecoverySecretPageState extends State<RecoverySecretPage> {
   String? _password;
   bool _argumentsLoaded = false;
   bool _isLoadingArguments = true;
-  String? _totp;
 
   @override
   void initState() {
@@ -63,9 +62,7 @@ class _RecoverySecretPageState extends State<RecoverySecretPage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // Só tentamos carregar os argumentos uma vez para evitar loops com setState
     if (_isLoadingArguments) {
-      // Usamos _isLoadingArguments como um guarda
       final arguments = ModalRoute.of(context)?.settings.arguments;
       if (arguments != null && arguments is Map<String, String>) {
         setState(() {
@@ -75,10 +72,9 @@ class _RecoverySecretPageState extends State<RecoverySecretPage> {
           _isLoadingArguments = false;
         });
         if (!_argumentsLoaded) {
-          _handleMissingArguments(); // Se email ou password ainda forem nulos após o cast
+          _handleMissingArguments();
         }
       } else {
-        // Argumentos não existem ou não são do tipo esperado
         setState(() {
           _argumentsLoaded = false;
           _isLoadingArguments = false;
@@ -89,11 +85,8 @@ class _RecoverySecretPageState extends State<RecoverySecretPage> {
   }
 
   void _handleMissingArguments() {
-    // Usamos addPostFrameCallback para garantir que a navegação ou o SnackBar
-    // aconteçam depois que o frame atual de build estiver completo.
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
-        // Verifique se o widget ainda está montado
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text(
@@ -101,8 +94,6 @@ class _RecoverySecretPageState extends State<RecoverySecretPage> {
             backgroundColor: Colors.red,
           ),
         );
-        // Redireciona para a tela de login (ou a rota inicial '/')
-        // Usamos pushNamedAndRemoveUntil para limpar a pilha de navegação até a rota inicial
         Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
       }
     });
@@ -141,7 +132,7 @@ class _RecoverySecretPageState extends State<RecoverySecretPage> {
               ..hideCurrentSnackBar()
               ..showSnackBar(SnackBar(
                 content: Text(
-                  state.message.message,
+                  state.error.message,
                   style: const TextStyle(fontSize: 15),
                 ),
                 backgroundColor: AppColors.textPrimary,
@@ -190,7 +181,6 @@ class _RecoverySecretPageState extends State<RecoverySecretPage> {
                                 ? _otpFocusNodes[index + 1]
                                 : null,
                             onChanged: (value) {
-                              debugPrint('aqui' + value.toString());
                               _code = _otpControllers
                                   .map((controller) => controller.text)
                                   .join('');
@@ -205,17 +195,12 @@ class _RecoverySecretPageState extends State<RecoverySecretPage> {
                 InkWell(
                   onTap: _isOtpComplete
                       ? () {
-                          debugPrint('n entrou');
                           _code = _otpControllers
                               .map((controller) => controller.text)
                               .join('');
-                          debugPrint(_code);
-                          debugPrint(_email);
-                          debugPrint(_password);
                           if (_code != null &&
                               _email != null &&
                               _password != null) {
-                            debugPrint('entrou');
                             context.read<AuthBloc>().add(RecoverySecretEvent(
                                 email: _email!,
                                 password: _password!,

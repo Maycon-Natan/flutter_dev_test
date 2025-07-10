@@ -68,7 +68,7 @@ class AuthRepository {
         if (response.data["message"] == "Invalid password") {
           return RecoverySecretFailureResult("Senha inválida");
         } else if (response.data["message"] == "Invalid recovery code") {
-          return RecoverySecretFailureResult("Código de recuperação inválido");
+          return RecoverySecretFailureResult("Código inválido");
         }
       } else if (response.statusCode == 404) {
         return RecoverySecretFailureResult("Usuário não encontrado");

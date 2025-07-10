@@ -31,7 +31,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(LoginSuccess());
     } else if (result is LoginFailureResult) {
       emit(LoginFailure(
-          message: AuthException(result.message,
+          error: AuthException(result.message,
               statusCode: result.statusCode ?? 0)));
     }
   }
@@ -48,7 +48,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       _secret = secret;
       emit(GetRecoverySecretSuccess(otp: otp));
     } else if (result is RecoverySecretFailureResult) {
-      emit(GetRecoverySecretFailure(message: AuthException(result.message)));
+      emit(GetRecoverySecretFailure(error: AuthException(result.message)));
     }
   }
 }

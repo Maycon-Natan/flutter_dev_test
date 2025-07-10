@@ -64,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
                 ..hideCurrentSnackBar()
                 ..showSnackBar(SnackBar(
                   content: Text(
-                    state.message.message,
+                    state.error.message,
                     style: const TextStyle(fontSize: 15),
                   ),
                   backgroundColor: AppColors.textPrimary,
